@@ -1,0 +1,2319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Safari Golf Club Bay Area</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: #333;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #2d5a27 0%, #4caf50 100%);
+            color: white;
+            padding: 25px;
+            position: relative;
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .club-info h1 {
+            font-size: 2.4em;
+            margin-bottom: 8px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .club-info p {
+            font-size: 1.2em;
+            opacity: 0.95;
+        }
+        
+        .menu-toggle {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 28px;
+            cursor: pointer;
+            padding: 12px;
+            border-radius: 8px;
+            transition: background 0.3s ease;
+        }
+        
+        .menu-toggle:hover {
+            background: rgba(255,255,255,0.2);
+        }
+        
+        .stats-panel {
+            display: none;
+            background: rgba(255,255,255,0.98);
+            border-radius: 12px;
+            padding: 25px;
+            margin-top: 20px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+            max-height: 600px;
+            overflow-y: auto;
+            position: relative;
+        }
+        
+        .stats-panel.active {
+            display: block;
+            animation: slideDown 0.3s ease-out;
+        }
+        
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .close-stats {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: none;
+            border: none;
+            color: #666;
+            font-size: 24px;
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+        
+        .close-stats:hover {
+            color: #333;
+            background: rgba(0,0,0,0.1);
+        }
+        
+        .stats-nav {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 25px;
+            border-bottom: 2px solid #e0e0e0;
+            padding-bottom: 15px;
+            padding-right: 40px;
+        }
+        
+        .stats-nav-btn {
+            background: #f1f8e9;
+            border: 2px solid #4caf50;
+            color: #2d5a27;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .stats-nav-btn:hover {
+            background: #e8f5e8;
+        }
+        
+        .stats-nav-btn.active {
+            background: #4caf50;
+            color: white;
+        }
+        
+        .stats-content {
+            display: none;
+        }
+        
+        .stats-content.active {
+            display: block;
+            animation: fadeIn 0.3s ease-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .tabs {
+            display: flex;
+            background: #f1f8e9;
+            border-bottom: 3px solid #4caf50;
+        }
+        
+        .tab {
+            padding: 18px 30px;
+            cursor: pointer;
+            border: none;
+            background: none;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .tab:hover {
+            background: #e8f5e8;
+        }
+        
+        .tab.active {
+            background: #4caf50;
+            color: white;
+        }
+        
+        .tab-content {
+            display: none;
+            padding: 30px;
+            min-height: 600px;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .dashboard-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+        
+        .card {
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .card h3 {
+            color: #2d5a27;
+            margin-bottom: 20px;
+            border-bottom: 3px solid #4caf50;
+            padding-bottom: 12px;
+            font-size: 1.4em;
+        }
+        
+        /* Game Schedule Styles */
+        .schedule-controls {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .schedule-btn {
+            background: #f1f8e9;
+            border: 2px solid #4caf50;
+            color: #2d5a27;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .schedule-btn:hover {
+            background: #e8f5e8;
+        }
+        
+        .schedule-btn.active {
+            background: #4caf50;
+            color: white;
+        }
+        
+        .schedule-container {
+            max-height: 500px;
+            overflow-y: auto;
+            padding-right: 10px;
+        }
+        
+        .schedule-panel {
+            display: none;
+        }
+        
+        .schedule-panel.active {
+            display: block;
+            animation: fadeIn 0.3s ease-out;
+        }
+        
+        .schedule-week {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-left: 5px solid #4caf50;
+            transition: transform 0.2s ease;
+        }
+        
+        .schedule-week:hover {
+            transform: translateY(-2px);
+        }
+        
+        .week-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .week-title {
+            font-weight: bold;
+            color: #2d5a27;
+            font-size: 1.2em;
+        }
+        
+        .week-dates {
+            color: #666;
+            font-size: 0.95em;
+        }
+        
+        .players-list {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 15px;
+        }
+        
+        .player {
+            background: white;
+            padding: 12px 15px;
+            border-radius: 8px;
+            border: 1px solid #e0e0e0;
+            font-weight: 500;
+        }
+        
+        /* Rankings Styles */
+        .ranking-item {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background 0.2s ease;
+        }
+        
+        .ranking-item:hover {
+            background: #f8f9fa;
+        }
+        
+        .ranking-item:last-child {
+            border-bottom: none;
+        }
+        
+        .ranking-item.top-3 {
+            background: #f1f8e9;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            border-left: 4px solid #4caf50;
+        }
+        
+        .ranking-position {
+            font-weight: bold;
+            color: #2d5a27;
+            min-width: 35px;
+            font-size: 1.1em;
+        }
+        
+        .ranking-name {
+            flex: 1;
+            margin: 0 15px;
+            font-size: 1.1em;
+        }
+        
+        .ranking-handicap {
+            font-weight: bold;
+            color: #666;
+            font-size: 1.1em;
+        }
+        
+        .btn {
+            background: #4caf50;
+            color: white;
+            border: none;
+            padding: 14px 28px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .btn:hover {
+            background: #45a049;
+            transform: translateY(-2px);
+        }
+        
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+            border: none;
+            padding: 14px 28px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-secondary:hover {
+            background: #5a6268;
+            transform: translateY(-2px);
+        }
+        
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 14px 28px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-danger:hover {
+            background: #c82333;
+            transform: translateY(-2px);
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #2d5a27;
+            font-size: 1.1em;
+        }
+        
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 15px;
+            transition: border-color 0.3s ease;
+        }
+        
+        input:focus, select:focus, textarea:focus {
+            border-color: #4caf50;
+            outline: none;
+        }
+        
+        textarea {
+            height: 120px;
+            resize: vertical;
+        }
+        
+        .upcoming-badge {
+            background: #ff9800;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 15px;
+            font-size: 0.85em;
+            margin-left: 12px;
+            font-weight: 600;
+        }
+        
+        .past-badge {
+            background: #757575;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 15px;
+            font-size: 0.85em;
+            margin-left: 12px;
+            font-weight: 600;
+        }
+        
+        .date-tbc {
+            color: #ff9800;
+            font-style: italic;
+            font-weight: 500;
+        }
+        
+        .membership-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .membership-item {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            border-left: 4px solid #4caf50;
+        }
+        
+        .membership-count {
+            font-size: 1.8em;
+            font-weight: bold;
+            color: #2d5a27;
+            margin: 8px 0;
+        }
+        
+        .membership-label {
+            font-size: 0.95em;
+            color: #666;
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+        
+        .event-item {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-left: 5px solid #2196F3;
+            transition: transform 0.2s ease;
+        }
+        
+        .event-item:hover {
+            transform: translateY(-2px);
+        }
+        
+        .event-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .event-title {
+            font-weight: bold;
+            color: #2d5a27;
+            font-size: 1.2em;
+        }
+        
+        .event-date {
+            color: #666;
+            font-size: 0.95em;
+        }
+        
+        .admin-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+        
+        .admin-section {
+            margin-bottom: 30px;
+        }
+        
+        .points-form {
+            display: flex;
+            gap: 10px;
+            align-items: end;
+        }
+        
+        .points-input {
+            flex: 1;
+        }
+        
+        .form-actions {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        /* Bylaws Styles */
+        .bylaws-container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        
+        .bylaws-article {
+            margin-bottom: 25px;
+        }
+        
+        .bylaws-article h3 {
+            color: #2d5a27;
+            margin-bottom: 15px;
+            font-size: 1.4em;
+            border-bottom: 2px solid #4caf50;
+            padding-bottom: 8px;
+        }
+        
+        .bylaws-section {
+            margin-bottom: 20px;
+            padding-left: 15px;
+        }
+        
+        .bylaws-section h4 {
+            color: #2d5a27;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+        
+        .bylaws-section p {
+            line-height: 1.6;
+            color: #555;
+            margin-bottom: 8px;
+        }
+        
+        .bylaws-section ul {
+            margin-left: 20px;
+            margin-bottom: 15px;
+        }
+        
+        .bylaws-section li {
+            line-height: 1.6;
+            color: #555;
+            margin-bottom: 5px;
+        }
+        
+        /* Contact Support Styles */
+        .contact-info {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 25px;
+        }
+        
+        .contact-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            padding: 10px;
+            background: white;
+            border-radius: 8px;
+            border-left: 4px solid #4caf50;
+        }
+        
+        .contact-icon {
+            font-size: 24px;
+            margin-right: 15px;
+            color: #4caf50;
+        }
+        
+        .contact-details h4 {
+            color: #2d5a27;
+            margin-bottom: 5px;
+        }
+        
+        .contact-details p {
+            color: #666;
+            margin: 0;
+        }
+        
+        /* Admin Login Styles */
+        .admin-login {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+            text-align: center;
+        }
+        
+        .login-form {
+            background: #f9f9f9;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 400px;
+        }
+        
+        .login-form h3 {
+            color: #2d5a27;
+            margin-bottom: 20px;
+        }
+        
+        .error-message {
+            color: #dc3545;
+            margin-top: 10px;
+            font-weight: 500;
+        }
+        
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+        
+        .modal {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        
+        .modal h3 {
+            color: #2d5a27;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        /* Edit Game Styles */
+        .edit-game-btn {
+            background: #2196F3;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+            margin-right: 10px;
+        }
+        
+        .edit-game-btn:hover {
+            background: #0b7dda;
+            transform: translateY(-2px);
+        }
+        
+        .edit-players-btn {
+            background: #FF9800;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+        
+        .edit-players-btn:hover {
+            background: #e68900;
+            transform: translateY(-2px);
+        }
+        
+        .game-list {
+            margin-top: 20px;
+        }
+        
+        .game-item {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-left: 5px solid #4caf50;
+            transition: transform 0.2s ease;
+        }
+        
+        .game-item:hover {
+            transform: translateY(-2px);
+        }
+        
+        .game-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .game-title {
+            font-weight: bold;
+            color: #2d5a27;
+            font-size: 1.1em;
+        }
+        
+        .game-date {
+            color: #666;
+            font-size: 0.9em;
+        }
+        
+        .player-select-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .player-select {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            border: 2px solid #e0e0e0;
+        }
+        
+        .player-select h4 {
+            color: #2d5a27;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        /* Contact Edit Styles */
+        .contact-edit-form {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border-left: 4px solid #4caf50;
+        }
+        
+        .contact-edit-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .edit-contact-btn {
+            background: #2196F3;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .edit-contact-btn:hover {
+            background: #0b7dda;
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-content">
+                <div class="club-info">
+                    <h1>⛳ Safari Golf Club Bay Area 🏌️‍♂️</h1>
+                    <p>Uniting Golfers, Growing Together</p>
+                </div>
+                <button class="menu-toggle" onclick="toggleStats()">☰</button>
+            </div>
+            
+            <div class="stats-panel" id="statsPanel">
+                <button class="close-stats" onclick="closeStats()">✕</button>
+                <div class="stats-nav">
+                    <button class="stats-nav-btn active" onclick="showStatsContent('bylaws')">Club Bylaws</button>
+                    <button class="stats-nav-btn" onclick="showStatsContent('membership')">Membership Policy</button>
+                    <button class="stats-nav-btn" onclick="showStatsContent('contact')">Contact Support</button>
+                </div>
+                
+                <div id="bylawsContent" class="stats-content active">
+                    <div class="bylaws-container">
+                        <h2 style="color: #2d5a27; margin-bottom: 25px; text-align: center;">Safari Golf Club Bay Area Bylaws</h2>
+                        
+                        <div class="bylaws-article">
+                            <h3>Article III – Membership and Fiscal Year</h3>
+                            
+                            <div class="bylaws-section">
+                                <h4>Section 2: Membership Requirements</h4>
+                                <p>• Members must keep their handicap scores current.</p>
+                                <p>• Members must post all their scores to maintain fairness.</p>
+                                <p>• Guests can join in on club outings and events, but they're encouraged to become members.</p>
+                            </div>
+                            
+                            <div class="bylaws-section">
+                                <h4>Section 5: Fiscal Year</h4>
+                                <p>• The fiscal year (financial year) runs from January 1 to December 31.</p>
+                                <p>• This sets the timeframe for budgeting, dues, and financial reporting.</p>
+                            </div>
+                            
+                            <div class="bylaws-section">
+                                <h4>Section 6: New Member Process</h4>
+                                <p>• New members must be proposed by an existing member in good standing.</p>
+                                <p>• The Board of Directors will review and vote on whether to accept each new member.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="bylaws-article">
+                            <h3>Article V – Officers and Directors</h3>
+                            
+                            <div class="bylaws-section">
+                                <h4>Section 1: Club Officers</h4>
+                                <p>• Lists the club's officers: Chairman, Treasurer, Handicap Officer, and Secretary.</p>
+                                <p>• These officers are elected each year at a club meeting.</p>
+                            </div>
+                            
+                            <div class="bylaws-section">
+                                <h4>Section 2: Chairman Responsibilities</h4>
+                                <p>• Leads all meetings.</p>
+                                <p>• Ensures bylaws and rules are followed.</p>
+                                <p>• Oversees club operations and reports on them annually.</p>
+                                <p>• Appoints committees and is automatically a member of each (ex-officio).</p>
+                            </div>
+                            
+                            <div class="bylaws-section">
+                                <h4>Section 3: Secretary Responsibilities</h4>
+                                <p>• Records meeting minutes and handles official correspondence.</p>
+                                <p>• Sends notices and assists with administrative tasks.</p>
+                                <p>• If the President (or Chairman) is absent, the Secretary calls the meeting to order and names someone to lead it temporarily.</p>
+                            </div>
+                            
+                            <div class="bylaws-section">
+                                <h4>Section 4: Treasurer Responsibilities</h4>
+                                <p>• Manages all club funds.</p>
+                                <p>• Handles payments and keeps financial records.</p>
+                                <p>• Gives regular financial reports to the board and at club meetings.</p>
+                            </div>
+                            
+                            <div class="bylaws-section">
+                                <h4>Section 5: Handicap Officer Responsibilities</h4>
+                                <p>• Maintains all members' handicap records according to official golf rules.</p>
+                                <p>• Reports any irregularities or cheating in handicap records to the Board.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="membershipContent" class="stats-content">
+                    <div class="bylaws-container">
+                        <h2 style="color: #2d5a27; margin-bottom: 25px; text-align: center;">Membership Policy and Fee Schedule</h2>
+                        
+                        <div class="bylaws-article">
+                            <div class="bylaws-section">
+                                <h4>Regular and Associate Club Member Rate</h4>
+                                <p>The NCGA is an association of member clubs. Regular and Associate club membership dues will be charged when the member is added to the club's roster. The NCGA requires 100% enrollment of their membership (social members excluded).</p>
+                                
+                                <ul>
+                                    <li>NCGA member rate (new, reinstated or renewed): $46.00</li>
+                                    <li>Regular member clubs will also receive a complementary handicap computer system installed at their course.</li>
+                                    <li>Multi-members (individuals who maintain a membership at two or more NCGA member clubs) pay full NCGA dues at all NCGA member clubs. Multi-member rebate options are available each summer.</li>
+                                </ul>
+                            </div>
+                            
+                            <div class="bylaws-section">
+                                <h4>Billing and Payment Process</h4>
+                                <ul>
+                                    <li>At the beginning of the year the NCGA will issue an invoice for all golfers appearing on the club's active handicap roster.</li>
+                                    <li>Additional invoices will then be sent to clubs on a monthly basis for members added to the handicap roster throughout the year.</li>
+                                    <li>A club is responsible for NCGA membership dues for all golfers appearing on their handicap roster.</li>
+                                    <li>Clubs need not pay membership dues until invoiced.</li>
+                                </ul>
+                            </div>
+                            
+                            <div class="bylaws-section">
+                                <h4>Delinquency Policy</h4>
+                                <p>A club is considered delinquent and will be suspended from all services if annual payments are not received by April 30th each year.</p>
+                                
+                                <p>Per the NCGA By-laws regarding delinquency:</p>
+                                <ul>
+                                    <li>As of February 28th, any Club with an outstanding balance of $1,000 or more or with an outstanding balance that represents 25% or more of their January 15th annual billing will receive a letter of notification that they are more than 30 days past due, and they will be assessed 2% interest on their balance as of February 28th.</li>
+                                    <li>If as of April 1st, the Club has not remitted payment, they will be notified that they are officially delinquent, and their members will be ineligible for any NCGA competitions. The Club will also continue to be assessed a 2% interest on their balance.</li>
+                                    <li>If no payment is received by April 30th, the Club's Handicap service will be cut off and members will receive an NH for a handicap.</li>
+                                    <li>If any of these actions must be taken, please know that we will be notifying your Club's members of the situation as it pertains to their membership.</li>
+                                </ul>
+                                
+                                <p><strong>Effective January 2024</strong></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="contactContent" class="stats-content">
+                    <!-- This will be populated dynamically -->
+                </div>
+            </div>
+        </header>
+        
+        <div class="tabs">
+            <button class="tab active" onclick="switchTab('dashboard')">Dashboard</button>
+            <button class="tab" onclick="switchTab('games')">Games & Events</button>
+            <button class="tab" onclick="switchTab('news')">News Feed</button>
+            <button class="tab" onclick="switchTab('rankings')">Rankings</button>
+            <button class="tab" onclick="switchTab('admin')">Admin</button>
+        </div>
+        
+        <!-- Dashboard -->
+        <div id="dashboard" class="tab-content active">
+            <div class="dashboard-content">
+                <div class="card">
+                    <h3>Game Schedule</h3>
+                    <div class="schedule-controls">
+                        <button class="schedule-btn active" onclick="showSchedulePanel('upcoming')">Upcoming Games</button>
+                        <button class="schedule-btn" onclick="showSchedulePanel('past')">Past Games</button>
+                    </div>
+                    
+                    <div class="schedule-container">
+                        <div id="upcomingSchedule" class="schedule-panel active">
+                            <!-- Upcoming games will be populated here -->
+                        </div>
+                        <div id="pastSchedule" class="schedule-panel">
+                            <!-- Past games will be populated here -->
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <h3>Current Rankings</h3>
+                    <div id="topRankings">
+                        <!-- Top rankings will be populated here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Games & Events -->
+        <div id="games" class="tab-content">
+            <div class="dashboard-content">
+                <div class="card">
+                    <h3>Upcoming Games</h3>
+                    <div id="upcomingGamesList">
+                        <!-- Games will be populated here -->
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <h3>Club Events</h3>
+                    <div id="eventsList">
+                        <!-- Events will be populated here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- News Feed -->
+        <div id="news" class="tab-content">
+            <h2 style="color: #2d5a27; margin-bottom: 25px;">Club News Feed</h2>
+            
+            <div id="newsFeed">
+                <!-- News items will be populated here -->
+            </div>
+        </div>
+        
+        <!-- Rankings -->
+        <div id="rankings" class="tab-content">
+            <h2 style="color: #2d5a27; margin-bottom: 25px;">Member Rankings & Handicaps</h2>
+            
+            <div class="card">
+                <h3>Current Season Rankings</h3>
+                <table style="width: 100%; border-collapse: collapse;">
+                    <thead>
+                        <tr style="background: #f1f8e9;">
+                            <th style="padding: 15px; text-align: left; color: #2d5a27;">Rank</th>
+                            <th style="padding: 15px; text-align: left; color: #2d5a27;">Name</th>
+                            <th style="padding: 15px; text-align: left; color: #2d5a27;">Handicap</th>
+                            <th style="padding: 15px; text-align: left; color: #2d5a27;">Type</th>
+                            <th style="padding: 15px; text-align: left; color: #2d5a27;">Points</th>
+                        </tr>
+                    </thead>
+                    <tbody id="rankingsTable">
+                        <!-- Rankings will be populated here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <!-- Admin Dashboard -->
+        <div id="admin" class="tab-content">
+            <div id="adminLogin" class="admin-login">
+                <div class="login-form">
+                    <h3>Admin Login Required</h3>
+                    <div class="form-group">
+                        <label>Password</label>
+                        <input type="password" id="adminPassword" placeholder="Enter admin password">
+                    </div>
+                    <button class="btn" onclick="authenticateAdmin()">Login</button>
+                    <div id="loginError" class="error-message" style="display: none;">Invalid password</div>
+                </div>
+            </div>
+            
+            <div id="adminContent" style="display: none;">
+                <h2 style="color: #2d5a27; margin-bottom: 25px;">Admin Dashboard</h2>
+                
+                <div class="admin-grid">
+                    <!-- Left Column -->
+                    <div>
+                        <!-- Membership Management -->
+                        <div class="card admin-section">
+                            <h3>Membership Management</h3>
+                            <div class="button-group">
+                                <button class="btn" onclick="showMemberForm()">+ Add New Member</button>
+                            </div>
+                            
+                            <div id="memberForm" style="display: none; background: #f9f9f9; padding: 25px; border-radius: 12px; margin-bottom: 25px; border-left: 5px solid #4caf50;">
+                                <h4 style="color: #2d5a27; margin-bottom: 20px;">Add New Member</h4>
+                                <div class="form-group">
+                                    <label>Full Name</label>
+                                    <input type="text" id="memberName" placeholder="Enter full name">
+                                </div>
+                                <div class="form-group">
+                                    <label>Email</label>
+                                    <input type="email" id="memberEmail" placeholder="Enter email">
+                                </div>
+                                <div class="form-group">
+                                    <label>Handicap</label>
+                                    <input type="number" id="memberHandicap" step="0.1" placeholder="Enter handicap (optional)">
+                                </div>
+                                <div class="form-group">
+                                    <label>Membership Type</label>
+                                    <select id="memberType">
+                                        <option value="regular">Regular Member</option>
+                                        <option value="associate">Associate Member</option>
+                                        <option value="junior">Junior Member</option>
+                                        <option value="social">Social Member</option>
+                                    </select>
+                                </div>
+                                <div class="form-actions">
+                                    <button class="btn" onclick="saveMember()">Save Member</button>
+                                    <button class="btn-secondary" onclick="hideMemberForm()">Cancel</button>
+                                </div>
+                            </div>
+                            
+                            <div class="membership-grid">
+                                <div class="membership-item">
+                                    <div class="membership-label">Regular Members</div>
+                                    <div class="membership-count" id="regularCount">0</div>
+                                </div>
+                                <div class="membership-item">
+                                    <div class="membership-label">Associate Members</div>
+                                    <div class="membership-count" id="associateCount">0</div>
+                                </div>
+                                <div class="membership-item">
+                                    <div class="membership-label">Junior Members</div>
+                                    <div class="membership-count" id="juniorCount">0</div>
+                                </div>
+                                <div class="membership-item">
+                                    <div class="membership-label">Social Members</div>
+                                    <div class="membership-count" id="socialCount">0</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Points Management -->
+                        <div class="card admin-section">
+                            <h3>Points Management</h3>
+                            <div class="form-group">
+                                <label>Select Member</label>
+                                <select id="pointsMemberSelect">
+                                    <!-- Members will be populated here -->
+                                </select>
+                            </div>
+                            <div class="points-form">
+                                <div class="form-group points-input">
+                                    <label>Add Points</label>
+                                    <input type="number" id="pointsToAdd" placeholder="Enter points to add" min="0">
+                                </div>
+                                <button class="btn" onclick="addPoints()">Add Points</button>
+                            </div>
+                        </div>
+
+                        <!-- Contact Support Management -->
+                        <div class="card admin-section">
+                            <h3>Contact Support Management</h3>
+                            <div class="button-group">
+                                <button class="btn" onclick="showContactForm()">+ Add Contact</button>
+                            </div>
+                            
+                            <div id="contactForm" style="display: none; background: #f9f9f9; padding: 25px; border-radius: 12px; margin-bottom: 25px; border-left: 5px solid #4caf50;">
+                                <h4 style="color: #2d5a27; margin-bottom: 20px;">Add New Contact</h4>
+                                <div class="form-group">
+                                    <label>Contact Type</label>
+                                    <select id="contactType">
+                                        <option value="email">Email Support</option>
+                                        <option value="phone">Phone Support</option>
+                                        <option value="chairman">Club Chairman</option>
+                                        <option value="treasurer">Treasurer</option>
+                                        <option value="handicap">Handicap Officer</option>
+                                        <option value="other">Other</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Title/Name</label>
+                                    <input type="text" id="contactTitle" placeholder="e.g., Email Support or Sammy">
+                                </div>
+                                <div class="form-group">
+                                    <label>Contact Details</label>
+                                    <input type="text" id="contactDetails" placeholder="e.g., support@safarigolfclub.com or (555) 123-4567">
+                                </div>
+                                <div class="form-group">
+                                    <label>Description</label>
+                                    <input type="text" id="contactDescription" placeholder="e.g., We typically respond within 24 hours">
+                                </div>
+                                <div class="form-actions">
+                                    <button class="btn" onclick="saveContact()">Save Contact</button>
+                                    <button class="btn-secondary" onclick="hideContactForm()">Cancel</button>
+                                </div>
+                            </div>
+                            
+                            <div id="contactsList">
+                                <!-- Contacts will be populated here -->
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Right Column -->
+                    <div>
+                        <!-- News Management -->
+                        <div class="card admin-section">
+                            <h3>News Management</h3>
+                            <div class="button-group">
+                                <button class="btn" onclick="showNewsForm()">+ Post News</button>
+                            </div>
+                            
+                            <div id="newsForm" style="display: none; background: #f9f9f9; padding: 25px; border-radius: 12px; margin-bottom: 25px; border-left: 5px solid #4caf50;">
+                                <h4 style="color: #2d5a27; margin-bottom: 20px;">Create News Post</h4>
+                                <div class="form-group">
+                                    <label>Title</label>
+                                    <input type="text" id="newsTitle" placeholder="Enter news title">
+                                </div>
+                                <div class="form-group">
+                                    <label>Content</label>
+                                    <textarea id="newsContent" placeholder="Enter news content"></textarea>
+                                </div>
+                                <div class="form-actions">
+                                    <button class="btn" onclick="saveNews()">Post News</button>
+                                    <button class="btn-secondary" onclick="hideNewsForm()">Cancel</button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Game & Event Management -->
+                        <div class="card admin-section">
+                            <h3>Game & Event Management</h3>
+                            <div class="button-group">
+                                <button class="btn" onclick="showGameForm()">+ Schedule New Game</button>
+                                <button class="btn-secondary" onclick="showEventForm()">+ Add New Event</button>
+                            </div>
+                            
+                            <!-- Game Form -->
+                            <div id="gameForm" style="display: none; background: #f9f9f9; padding: 25px; border-radius: 12px; margin-bottom: 25px; border-left: 5px solid #4caf50;">
+                                <h4 style="color: #2d5a27; margin-bottom: 20px;">Schedule New Game</h4>
+                                <div class="form-group">
+                                    <label>Game Name</label>
+                                    <input type="text" id="gameName" placeholder="Enter game name">
+                                </div>
+                                <div class="form-group">
+                                    <label>Date</label>
+                                    <input type="date" id="gameDate">
+                                </div>
+                                <div class="form-group">
+                                    <label>Host</label>
+                                    <input type="text" id="gameHost" placeholder="Enter host name">
+                                </div>
+                                <div class="form-group">
+                                    <label>Description</label>
+                                    <textarea id="gameDescription" placeholder="Enter game description"></textarea>
+                                </div>
+                                <div class="form-actions">
+                                    <button class="btn" onclick="saveGame()">Save Game</button>
+                                    <button class="btn-secondary" onclick="hideGameForm()">Cancel</button>
+                                </div>
+                            </div>
+                            
+                            <!-- Event Form -->
+                            <div id="eventForm" style="display: none; background: #f9f9f9; padding: 25px; border-radius: 12px; margin-bottom: 25px; border-left: 5px solid #2196F3;">
+                                <h4 style="color: #2d5a27; margin-bottom: 20px;">Add New Event</h4>
+                                <div class="form-group">
+                                    <label>Event Name</label>
+                                    <input type="text" id="eventName" placeholder="Enter event name">
+                                </div>
+                                <div class="form-group">
+                                    <label>Event Date</label>
+                                    <input type="date" id="eventDate">
+                                </div>
+                                <div class="form-group">
+                                    <label>Event Type</label>
+                                    <select id="eventType">
+                                        <option value="social">Social Event</option>
+                                        <option value="meeting">Club Meeting</option>
+                                        <option value="tournament">Tournament</option>
+                                        <option value="fundraiser">Fundraiser</option>
+                                        <option value="other">Other</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Location</label>
+                                    <input type="text" id="eventLocation" placeholder="Enter event location">
+                                </div>
+                                <div class="form-group">
+                                    <label>Description</label>
+                                    <textarea id="eventDescription" placeholder="Enter event description"></textarea>
+                                </div>
+                                <div class="form-actions">
+                                    <button class="btn" onclick="saveEvent()">Save Event</button>
+                                    <button class="btn-secondary" onclick="hideEventForm()">Cancel</button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Game Date Management -->
+                        <div class="card admin-section">
+                            <h3>Reschedule Games</h3>
+                            <div class="game-list" id="upcomingGamesAdmin">
+                                <!-- Upcoming games for editing will be populated here -->
+                            </div>
+                        </div>
+                        
+                        <!-- Quick Actions -->
+                        <div class="card admin-section">
+                            <h3>Quick Actions</h3>
+                            <div class="button-group">
+                                <button class="btn-secondary" onclick="exportData()">Export Data</button>
+                                <button class="btn-danger" onclick="clearAllData()">Clear All Data</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Password Modal -->
+    <div id="passwordModal" class="modal-overlay" style="display: none;">
+        <div class="modal">
+            <h3>Admin Access Required</h3>
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" id="modalPassword" placeholder="Enter admin password">
+            </div>
+            <div class="form-actions">
+                <button class="btn" onclick="authenticateModal()">Login</button>
+                <button class="btn-secondary" onclick="closeModal()">Cancel</button>
+            </div>
+            <div id="modalError" class="error-message" style="display: none; margin-top: 15px;">Invalid password</div>
+        </div>
+    </div>
+
+    <!-- Edit Game Date Modal -->
+    <div id="editGameModal" class="modal-overlay" style="display: none;">
+        <div class="modal">
+            <h3>Reschedule Game</h3>
+            <div class="form-group">
+                <label>Game Name</label>
+                <input type="text" id="editGameName" readonly>
+            </div>
+            <div class="form-group">
+                <label>Current Date</label>
+                <input type="text" id="editCurrentDate" readonly>
+            </div>
+            <div class="form-group">
+                <label>New Date</label>
+                <input type="date" id="editGameDate">
+            </div>
+            <div class="form-group">
+                <label>New End Date</label>
+                <input type="date" id="editGameEndDate">
+            </div>
+            <div class="form-actions">
+                <button class="btn" onclick="saveGameDate()">Save Changes</button>
+                <button class="btn-secondary" onclick="closeEditModal()">Cancel</button>
+            </div>
+            <div id="editError" class="error-message" style="display: none; margin-top: 15px;">Please enter valid dates</div>
+        </div>
+    </div>
+
+    <!-- Edit Players Modal -->
+    <div id="editPlayersModal" class="modal-overlay" style="display: none;">
+        <div class="modal">
+            <h3>Edit Game Players</h3>
+            <div class="form-group">
+                <label>Game Name</label>
+                <input type="text" id="editPlayersGameName" readonly>
+            </div>
+            <div class="player-select-container">
+                <div class="player-select">
+                    <h4>Player 1</h4>
+                    <select id="editPlayer1">
+                        <!-- Members will be populated here -->
+                    </select>
+                </div>
+                <div class="player-select">
+                    <h4>Player 2</h4>
+                    <select id="editPlayer2">
+                        <!-- Members will be populated here -->
+                    </select>
+                </div>
+            </div>
+            <div class="form-actions">
+                <button class="btn" onclick="saveGamePlayers()">Save Changes</button>
+                <button class="btn-secondary" onclick="closePlayersModal()">Cancel</button>
+            </div>
+            <div id="playersError" class="error-message" style="display: none; margin-top: 15px;">Please select two different players</div>
+        </div>
+    </div>
+
+    <script>
+        // Safari Golf Club Data - Final version with no guessing
+        let clubData = {
+            members: [
+                { id: 1, name: "Sammy", email: "sammy@safarigolf.com", handicap: null, type: "regular", joinDate: "2023-01-15", points: 0 },
+                { id: 2, name: "Munga", email: "munga@safarigolf.com", handicap: null, type: "regular", joinDate: "2023-02-20", points: 0 },
+                { id: 3, name: "James Mwangi Gachu", email: "james@safarigolf.com", handicap: null, type: "regular", joinDate: "2023-01-10", points: 0 },
+                { id: 4, name: "J Kitavi", email: "kitavi@safarigolf.com", handicap: null, type: "associate", joinDate: "2023-03-15", points: 0 },
+                { id: 5, name: "David Wambua", email: "david@safarigolf.com", handicap: null, type: "associate", joinDate: "2023-02-01", points: 0 },
+                { id: 6, name: "Simon", email: "simon@safarigolf.com", handicap: null, type: "regular", joinDate: "2023-04-10", points: 0 },
+                { id: 7, name: "Steve", email: "steve@safarigolf.com", handicap: null, type: "regular", joinDate: "2023-03-20", points: 0 },
+                { id: 8, name: "Rono", email: "rono@safarigolf.com", handicap: null, type: "associate", joinDate: "2023-05-15", points: 0 },
+                { id: 9, name: "Ndugu David", email: "ndugu@safarigolf.com", handicap: null, type: "regular", joinDate: "2023-02-28", points: 0 },
+                { id: 10, name: "Daniel Waithaka", email: "daniel@safarigolf.com", handicap: null, type: "regular", joinDate: "2023-04-05", points: 0 },
+                { id: 11, name: "Joshua Mwiti", email: "joshua@safarigolf.com", handicap: null, type: "regular", joinDate: "2023-01-25", points: 0 },
+                { id: 12, name: "James Kavele", email: "kavele@safarigolf.com", handicap: null, type: "associate", joinDate: "2023-03-10", points: 0 },
+                { id: 13, name: "Mululu", email: "mululu@safarigolf.com", handicap: null, type: "regular", joinDate: "2023-05-01", points: 0 },
+                { id: 14, name: "Maru", email: "maru@safarigolf.com", handicap: null, type: "associate", joinDate: "2023-04-20", points: 0 },
+                { id: 15, name: "Matta", email: "matta@safarigolf.com", handicap: null, type: "regular", joinDate: "2023-02-15", points: 0 },
+                { id: 16, name: "Karongo", email: "karongo@safarigolf.com", handicap: null, type: "associate", joinDate: "2023-05-10", points: 0 }
+            ],
+            games: [
+                // Past Games
+                { 
+                    id: 1, 
+                    name: "Week 1", 
+                    date: "2024-05-18", 
+                    endDate: "2024-05-25",
+                    host: "Sammy & Munga", 
+                    players: ["Sammy", "Munga"],
+                    status: "past",
+                    results: []
+                },
+                { 
+                    id: 2, 
+                    name: "Week 2", 
+                    date: "2024-05-25", 
+                    endDate: "2024-06-01",
+                    host: "James Mwangi Gachu & J Kitavi", 
+                    players: ["James Mwangi Gachu", "J Kitavi"],
+                    status: "past",
+                    results: []
+                },
+                // Upcoming Games
+                { 
+                    id: 3, 
+                    name: "Week 3", 
+                    date: "2024-06-08", 
+                    endDate: "2024-06-15",
+                    host: "Simon & Steve", 
+                    players: ["Simon", "Steve"],
+                    status: "upcoming",
+                    results: []
+                },
+                { 
+                    id: 4, 
+                    name: "Week 4", 
+                    date: "2024-06-15", 
+                    endDate: "2024-06-22",
+                    host: "Rono & Ndugu David", 
+                    players: ["Rono", "Ndugu David"],
+                    status: "upcoming",
+                    results: []
+                },
+                { 
+                    id: 5, 
+                    name: "Week 5", 
+                    date: "2024-06-22", 
+                    endDate: "2024-06-29",
+                    host: "Daniel Waithaka & Joshua Mwiti", 
+                    players: ["Daniel Waithaka", "Joshua Mwiti"],
+                    status: "upcoming",
+                    results: []
+                },
+                { 
+                    id: 6, 
+                    name: "Week 6", 
+                    date: "2024-06-29", 
+                    endDate: "2024-07-06",
+                    host: "James Kavele & Mululu", 
+                    players: ["James Kavele", "Mululu"],
+                    status: "upcoming",
+                    results: []
+                },
+                { 
+                    id: 7, 
+                    name: "Week 7", 
+                    date: "2024-07-06", 
+                    endDate: "2024-07-13",
+                    host: "Maru & Matta", 
+                    players: ["Maru", "Matta"],
+                    status: "upcoming",
+                    results: []
+                },
+                { 
+                    id: 8, 
+                    name: "Week 8", 
+                    date: "2024-07-13", 
+                    endDate: "2024-07-20",
+                    host: "Karongo & Sammy", 
+                    players: ["Karongo", "Sammy"],
+                    status: "upcoming",
+                    results: []
+                }
+            ],
+            events: [], // No events as requested
+            news: [
+                { 
+                    id: 1, 
+                    title: "🎉 May Tournament Success & Champion Celebration", 
+                    content: "Congratulations to our May Champion and to everyone who participated in the tournament. The event was both challenging and highly successful. Special thanks to @+1 (415) 937-2504 for being an excellent host.", 
+                    date: "2024-05-20" 
+                },
+                { 
+                    id: 2, 
+                    title: "🏌️‍♂️ June Tournament Announcement - Save the Date!", 
+                    content: "Our June Tournament is scheduled for June 21st and will be hosted by @+1 (510) 725-5079. Please confirm your availability so that we can predict how many tee times we need.", 
+                    date: "2024-05-20" 
+                },
+                { 
+                    id: 3, 
+                    title: "📋 Club Leadership Appointments 2025-2027", 
+                    content: "Following productive discussions, we're pleased to announce our club leadership for 2025-2027:\n\n• Chairman: @+1 (707) 206-9447\n• Treasurer: @+1 (415) 937-2504\n• Handicap Officer: @+1 (510) 552-4065\n• Secretary: James Kavele\n\nOur collective goal is to ensure the continued growth and success of Safari BA.", 
+                    date: "2024-05-20" 
+                },
+                { 
+                    id: 4, 
+                    title: "📜 Bylaws Development & Club Registration Process", 
+                    content: "We've begun drafting bylaws necessary for formal registration of Safari BA. Members who attended the closing session were paired for this initiative.\n\nStarting this week, pairs will propose 5 bylaws each. The first draft will be presented by Sunday for group review and voting.\n\nIf you weren't present for pairings, please PM to be paired with a fellow member. Your input is valuable!", 
+                    date: "2024-05-20" 
+                },
+                { 
+                    id: 5, 
+                    title: "📝 Action Required: Club Registration Information", 
+                    content: "To become a registered member of Safari BA, please send a direct message with:\n\n• Full Name\n• Address\n• Email Address\n\nWe need a minimum of 10 members to complete registration. The plan is to officially register the club in the new golfing calendar year.", 
+                    date: "2024-05-20" 
+                }
+            ],
+            contacts: [
+                {
+                    id: 1,
+                    type: "email",
+                    title: "Email Support",
+                    details: "support@safarigolfclub.com",
+                    description: "We typically respond within 24 hours"
+                },
+                {
+                    id: 2,
+                    type: "phone",
+                    title: "Phone Support",
+                    details: "(555) 123-4567",
+                    description: "Monday-Friday, 9AM-5PM PST"
+                },
+                {
+                    id: 3,
+                    type: "chairman",
+                    title: "Club Chairman",
+                    details: "Sammy - chairman@safarigolfclub.com",
+                    description: "For club governance and policy questions"
+                },
+                {
+                    id: 4,
+                    type: "treasurer",
+                    title: "Treasurer",
+                    details: "Munga - treasurer@safarigolfclub.com",
+                    description: "For membership dues and financial questions"
+                },
+                {
+                    id: 5,
+                    type: "handicap",
+                    title: "Handicap Officer",
+                    details: "James Mwangi Gachu - handicaps@safarigolfclub.com",
+                    description: "For handicap and scoring questions"
+                }
+            ]
+        };
+
+        // Admin credentials
+        const ADMIN_PASSWORD = "12345six7";
+        let currentEditingGameId = null;
+        let currentEditingContactId = null;
+
+        // Close stats panel
+        function closeStats() {
+            const panel = document.getElementById('statsPanel');
+            panel.classList.remove('active');
+        }
+
+        // Initialize the application
+        function initializeData() {
+            const saved = localStorage.getItem('safariGolfClubData');
+            if (saved) {
+                clubData = JSON.parse(saved);
+            }
+            generateGameSchedule();
+            updateDashboard();
+            renderGames();
+            renderEvents();
+            renderNews();
+            renderRankings();
+            updateMembershipStats();
+            populatePointsMemberSelect();
+            renderUpcomingGamesAdmin();
+            renderContacts();
+            renderContactSupport();
+            
+            // Always show login form when accessing admin tab
+            document.getElementById('adminLogin').style.display = 'flex';
+            document.getElementById('adminContent').style.display = 'none';
+        }
+
+        // Save data to localStorage
+        function saveData() {
+            localStorage.setItem('safariGolfClubData', JSON.stringify(clubData));
+            updateMembershipStats();
+        }
+
+        // Stats panel navigation
+        function showStatsContent(contentType) {
+            // Update buttons
+            document.querySelectorAll('.stats-nav-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            // Update content
+            document.querySelectorAll('.stats-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            if (contentType === 'contact') {
+                renderContactSupport();
+            }
+            
+            document.getElementById(contentType + 'Content').classList.add('active');
+        }
+
+        // Admin authentication
+        function authenticateAdmin() {
+            const password = document.getElementById('adminPassword').value;
+            const errorDiv = document.getElementById('loginError');
+            
+            if (password === ADMIN_PASSWORD) {
+                document.getElementById('adminLogin').style.display = 'none';
+                document.getElementById('adminContent').style.display = 'block';
+                errorDiv.style.display = 'none';
+            } else {
+                errorDiv.style.display = 'block';
+            }
+        }
+
+        // Modal authentication
+        function authenticateModal() {
+            const password = document.getElementById('modalPassword').value;
+            const errorDiv = document.getElementById('modalError');
+            
+            if (password === ADMIN_PASSWORD) {
+                document.getElementById('passwordModal').style.display = 'none';
+                document.getElementById('adminLogin').style.display = 'none';
+                document.getElementById('adminContent').style.display = 'block';
+                errorDiv.style.display = 'none';
+                document.getElementById('modalPassword').value = '';
+            } else {
+                errorDiv.style.display = 'block';
+            }
+        }
+
+        function closeModal() {
+            document.getElementById('passwordModal').style.display = 'none';
+            document.getElementById('modalPassword').value = '';
+            document.getElementById('modalError').style.display = 'none';
+            
+            // Switch back to dashboard if admin tab was just clicked
+            if (document.getElementById('admin').classList.contains('active')) {
+                switchTab('dashboard');
+            }
+        }
+
+        // Toggle stats panel
+        function toggleStats() {
+            const panel = document.getElementById('statsPanel');
+            panel.classList.toggle('active');
+        }
+
+        // Tab switching
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+            
+            // If admin tab is selected, show password modal
+            if (tabName === 'admin') {
+                document.getElementById('passwordModal').style.display = 'flex';
+            }
+        }
+
+        // Show schedule panel
+        function showSchedulePanel(panelType) {
+            // Update buttons
+            document.querySelectorAll('.schedule-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            // Update panels
+            document.querySelectorAll('.schedule-panel').forEach(panel => {
+                panel.classList.remove('active');
+            });
+            document.getElementById(panelType + 'Schedule').classList.add('active');
+        }
+
+        // Generate game schedule
+        function generateGameSchedule() {
+            const upcomingGames = clubData.games.filter(game => game.status === 'upcoming');
+            const pastGames = clubData.games.filter(game => game.status === 'past');
+            
+            // Upcoming games
+            document.getElementById('upcomingSchedule').innerHTML = upcomingGames.map(game => `
+                <div class="schedule-week">
+                    <div class="week-header">
+                        <div class="week-title">${game.name} <span class="upcoming-badge">Upcoming</span></div>
+                        <div class="week-dates">${formatDate(game.date)} - ${formatDate(game.endDate)}</div>
+                    </div>
+                    <div class="players-list">
+                        ${game.players.map(player => `<div class="player">${player}</div>`).join('')}
+                    </div>
+                    <div style="margin-top: 12px; font-size: 0.95em; color: #666;">
+                        <strong>Hosts:</strong> ${game.host}
+                    </div>
+                </div>
+            `).join('');
+            
+            // Past games
+            document.getElementById('pastSchedule').innerHTML = pastGames.map(game => `
+                <div class="schedule-week">
+                    <div class="week-header">
+                        <div class="week-title">${game.name} <span class="past-badge">Completed</span></div>
+                        <div class="week-dates">${formatDate(game.date)} - ${formatDate(game.endDate)}</div>
+                    </div>
+                    <div class="players-list">
+                        ${game.players.map(player => `<div class="player">${player}</div>`).join('')}
+                    </div>
+                    <div style="margin-top: 12px; font-size: 0.95em; color: #666;">
+                        <strong>Hosts:</strong> ${game.host}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function formatDate(dateString) {
+            if (!dateString) return 'TBC';
+            const date = new Date(dateString);
+            return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+        }
+
+        // Dashboard functions
+        function updateDashboard() {
+            // Top rankings by handicap (only show members with handicaps)
+            const membersWithHandicaps = clubData.members.filter(member => member.handicap !== null);
+            const topMembers = [...membersWithHandicaps].sort((a, b) => a.handicap - b.handicap).slice(0, 5);
+            
+            if (topMembers.length > 0) {
+                document.getElementById('topRankings').innerHTML = topMembers.map((member, index) => `
+                    <div class="ranking-item ${index < 3 ? 'top-3' : ''}">
+                        <div class="ranking-position">${index + 1}.</div>
+                        <div class="ranking-name">${member.name}</div>
+                        <div class="ranking-handicap">${member.handicap}</div>
+                    </div>
+                `).join('');
+            } else {
+                document.getElementById('topRankings').innerHTML = `
+                    <div style="text-align: center; padding: 40px; color: #666;">
+                        <p>No handicap data available yet.</p>
+                        <p>Add handicaps in the Members section to see rankings.</p>
+                    </div>
+                `;
+            }
+        }
+
+        // Update membership statistics
+        function updateMembershipStats() {
+            const regular = clubData.members.filter(m => m.type === 'regular').length;
+            const associate = clubData.members.filter(m => m.type === 'associate').length;
+            const junior = clubData.members.filter(m => m.type === 'junior').length;
+            const social = clubData.members.filter(m => m.type === 'social').length;
+            
+            document.getElementById('regularCount').textContent = regular;
+            document.getElementById('associateCount').textContent = associate;
+            document.getElementById('juniorCount').textContent = junior;
+            document.getElementById('socialCount').textContent = social;
+        }
+
+        // Populate points member select
+        function populatePointsMemberSelect() {
+            const select = document.getElementById('pointsMemberSelect');
+            select.innerHTML = clubData.members.map(member => `
+                <option value="${member.id}">${member.name} (Current: ${member.points} points)</option>
+            `).join('');
+        }
+
+        // Add points to member
+        function addPoints() {
+            const memberId = parseInt(document.getElementById('pointsMemberSelect').value);
+            const pointsToAdd = parseInt(document.getElementById('pointsToAdd').value);
+            
+            if (pointsToAdd > 0) {
+                const member = clubData.members.find(m => m.id === memberId);
+                if (member) {
+                    member.points += pointsToAdd;
+                    saveData();
+                    renderRankings();
+                    populatePointsMemberSelect();
+                    document.getElementById('pointsToAdd').value = '';
+                    alert(`Added ${pointsToAdd} points to ${member.name}`);
+                }
+            } else {
+                alert('Please enter a valid number of points.');
+            }
+        }
+
+        // Member management functions
+        function showMemberForm() {
+            document.getElementById('memberForm').style.display = 'block';
+            document.getElementById('memberName').value = '';
+            document.getElementById('memberEmail').value = '';
+            document.getElementById('memberHandicap').value = '';
+            document.getElementById('memberType').value = 'regular';
+        }
+
+        function hideMemberForm() {
+            document.getElementById('memberForm').style.display = 'none';
+        }
+
+        function saveMember() {
+            const name = document.getElementById('memberName').value;
+            const email = document.getElementById('memberEmail').value;
+            const handicap = document.getElementById('memberHandicap').value;
+            const type = document.getElementById('memberType').value;
+            
+            if (name && email) {
+                const newMember = {
+                    id: clubData.members.length + 1,
+                    name,
+                    email,
+                    handicap: handicap ? parseFloat(handicap) : null,
+                    type,
+                    points: 0,
+                    joinDate: new Date().toISOString().split('T')[0]
+                };
+                
+                clubData.members.push(newMember);
+                saveData();
+                hideMemberForm();
+                updateDashboard();
+                renderRankings();
+                populatePointsMemberSelect();
+                alert('Member added successfully!');
+            } else {
+                alert('Please fill in all required fields.');
+            }
+        }
+
+        // Game management functions
+        function showGameForm() {
+            document.getElementById('gameForm').style.display = 'block';
+            document.getElementById('eventForm').style.display = 'none';
+        }
+
+        function hideGameForm() {
+            document.getElementById('gameForm').style.display = 'none';
+        }
+
+        function saveGame() {
+            const name = document.getElementById('gameName').value;
+            const date = document.getElementById('gameDate').value;
+            const host = document.getElementById('gameHost').value;
+            const description = document.getElementById('gameDescription').value;
+            
+            if (name && date && host) {
+                const newGame = {
+                    id: clubData.games.length + 1,
+                    name,
+                    date,
+                    endDate: calculateEndDate(date),
+                    host,
+                    description,
+                    players: [],
+                    status: "upcoming",
+                    results: []
+                };
+                
+                clubData.games.push(newGame);
+                saveData();
+                renderGames();
+                hideGameForm();
+                generateGameSchedule();
+                renderUpcomingGamesAdmin();
+                alert('Game scheduled successfully!');
+            } else {
+                alert('Please fill in all required fields.');
+            }
+        }
+
+        function calculateEndDate(startDate) {
+            const date = new Date(startDate);
+            date.setDate(date.getDate() + 7); // Add 7 days for the end date
+            return date.toISOString().split('T')[0];
+        }
+
+        function renderGames() {
+            const upcomingGames = clubData.games.filter(g => g.status === 'upcoming' && g.date !== null);
+            document.getElementById('upcomingGamesList').innerHTML = upcomingGames.map(game => `
+                <div class="event-item">
+                    <div class="event-header">
+                        <div class="event-title">${game.name}</div>
+                        <div class="event-date">${formatDate(game.date)} - ${formatDate(game.endDate)}</div>
+                    </div>
+                    <div style="margin-bottom: 10px;">
+                        <strong>Host:</strong> ${game.host}
+                    </div>
+                    <div style="margin-bottom: 10px;">
+                        <strong>Players:</strong> ${game.players.join(', ')}
+                    </div>
+                    <div>
+                        <strong>Description:</strong> ${game.description}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Event management functions
+        function showEventForm() {
+            document.getElementById('eventForm').style.display = 'block';
+            document.getElementById('gameForm').style.display = 'none';
+        }
+
+        function hideEventForm() {
+            document.getElementById('eventForm').style.display = 'none';
+        }
+
+        function saveEvent() {
+            const name = document.getElementById('eventName').value;
+            const date = document.getElementById('eventDate').value;
+            const type = document.getElementById('eventType').value;
+            const location = document.getElementById('eventLocation').value;
+            const description = document.getElementById('eventDescription').value;
+            
+            if (name && date && location) {
+                const newEvent = {
+                    id: clubData.events.length + 1,
+                    name,
+                    date,
+                    type,
+                    location,
+                    description,
+                    status: "upcoming"
+                };
+                
+                clubData.events.push(newEvent);
+                saveData();
+                renderEvents();
+                hideEventForm();
+                alert('Event added successfully!');
+            } else {
+                alert('Please fill in all required fields.');
+            }
+        }
+
+        function renderEvents() {
+            const upcomingEvents = clubData.events.filter(event => event.status === 'upcoming');
+            if (upcomingEvents.length === 0) {
+                document.getElementById('eventsList').innerHTML = `
+                    <div style="text-align: center; padding: 40px; color: #666;">
+                        <p>No upcoming events scheduled.</p>
+                        <p>Add events in the Admin section to see them here.</p>
+                    </div>
+                `;
+            } else {
+                document.getElementById('eventsList').innerHTML = upcomingEvents.map(event => `
+                    <div class="event-item">
+                        <div class="event-header">
+                            <div class="event-title">${event.name}</div>
+                            <div class="event-date">${formatDate(event.date)}</div>
+                        </div>
+                        <div style="margin-bottom: 10px;">
+                            <strong>Type:</strong> ${event.type.charAt(0).toUpperCase() + event.type.slice(1)}
+                        </div>
+                        <div style="margin-bottom: 10px;">
+                            <strong>Location:</strong> ${event.location}
+                        </div>
+                        <div>
+                            <strong>Description:</strong> ${event.description}
+                        </div>
+                    </div>
+                `).join('');
+            }
+        }
+
+        // News management functions
+        function showNewsForm() {
+            document.getElementById('newsForm').style.display = 'block';
+        }
+
+        function hideNewsForm() {
+            document.getElementById('newsForm').style.display = 'none';
+        }
+
+        function saveNews() {
+            const title = document.getElementById('newsTitle').value;
+            const content = document.getElementById('newsContent').value;
+            
+            if (title && content) {
+                const newNews = {
+                    id: clubData.news.length + 1,
+                    title,
+                    content,
+                    date: new Date().toISOString().split('T')[0]
+                };
+                
+                clubData.news.unshift(newNews);
+                saveData();
+                renderNews();
+                hideNewsForm();
+                alert('News posted successfully!');
+            } else {
+                alert('Please fill in all fields.');
+            }
+        }
+
+        function renderNews() {
+            document.getElementById('newsFeed').innerHTML = clubData.news.map(news => `
+                <div class="card">
+                    <div style="color: #666; font-size: 0.9em; margin-bottom: 10px;">${new Date(news.date).toLocaleDateString()}</div>
+                    <h4 style="color: #2d5a27; margin-bottom: 15px;">${news.title}</h4>
+                    <p style="line-height: 1.6; white-space: pre-line;">${news.content}</p>
+                </div>
+            `).join('');
+        }
+
+        // Rankings functions
+        function renderRankings() {
+            const membersWithHandicaps = clubData.members.filter(member => member.handicap !== null);
+            const sortedMembers = [...membersWithHandicaps].sort((a, b) => a.handicap - b.handicap);
+            
+            if (sortedMembers.length === 0) {
+                document.getElementById('rankingsTable').innerHTML = `
+                    <tr>
+                        <td colspan="5" style="padding: 40px; text-align: center; color: #666;">
+                            <p>No handicap data available yet.</p>
+                            <p>Add handicaps in the Admin section to see rankings.</p>
+                        </td>
+                    </tr>
+                `;
+            } else {
+                document.getElementById('rankingsTable').innerHTML = sortedMembers.map((member, index) => `
+                    <tr>
+                        <td style="padding: 15px; border-bottom: 1px solid #eee;">${index + 1}</td>
+                        <td style="padding: 15px; border-bottom: 1px solid #eee;">${member.name}</td>
+                        <td style="padding: 15px; border-bottom: 1px solid #eee;">${member.handicap}</td>
+                        <td style="padding: 15px; border-bottom: 1px solid #eee;">${member.type.charAt(0).toUpperCase() + member.type.slice(1)}</td>
+                        <td style="padding: 15px; border-bottom: 1px solid #eee;">${member.points}</td>
+                    </tr>
+                `).join('');
+            }
+        }
+
+        // Game Date Management Functions
+        function renderUpcomingGamesAdmin() {
+            const upcomingGames = clubData.games.filter(game => game.status === 'upcoming');
+            document.getElementById('upcomingGamesAdmin').innerHTML = upcomingGames.map(game => `
+                <div class="game-item">
+                    <div class="game-header">
+                        <div class="game-title">${game.name}</div>
+                        <div class="game-date">${formatDate(game.date)} - ${formatDate(game.endDate)}</div>
+                    </div>
+                    <div style="margin-bottom: 10px;">
+                        <strong>Host:</strong> ${game.host}
+                    </div>
+                    <div style="margin-bottom: 10px;">
+                        <strong>Players:</strong> ${game.players.join(', ')}
+                    </div>
+                    <button class="edit-game-btn" onclick="editGameDate(${game.id})">Edit Dates</button>
+                    <button class="edit-players-btn" onclick="editGamePlayers(${game.id})">Edit Players</button>
+                </div>
+            `).join('');
+        }
+
+        function editGameDate(gameId) {
+            const game = clubData.games.find(g => g.id === gameId);
+            if (game) {
+                currentEditingGameId = gameId;
+                document.getElementById('editGameName').value = game.name;
+                document.getElementById('editCurrentDate').value = `${formatDate(game.date)} - ${formatDate(game.endDate)}`;
+                document.getElementById('editGameDate').value = game.date;
+                document.getElementById('editGameEndDate').value = game.endDate;
+                document.getElementById('editGameModal').style.display = 'flex';
+                document.getElementById('editError').style.display = 'none';
+            }
+        }
+
+        function closeEditModal() {
+            document.getElementById('editGameModal').style.display = 'none';
+            currentEditingGameId = null;
+        }
+
+        function saveGameDate() {
+            const newDate = document.getElementById('editGameDate').value;
+            const newEndDate = document.getElementById('editGameEndDate').value;
+            
+            if (!newDate || !newEndDate) {
+                document.getElementById('editError').style.display = 'block';
+                return;
+            }
+            
+            const game = clubData.games.find(g => g.id === currentEditingGameId);
+            if (game) {
+                game.date = newDate;
+                game.endDate = newEndDate;
+                saveData();
+                generateGameSchedule();
+                renderGames();
+                renderUpcomingGamesAdmin();
+                closeEditModal();
+                alert('Game dates updated successfully!');
+            }
+        }
+
+        // Game Players Management Functions
+        function editGamePlayers(gameId) {
+            const game = clubData.games.find(g => g.id === gameId);
+            if (game) {
+                currentEditingGameId = gameId;
+                document.getElementById('editPlayersGameName').value = game.name;
+                
+                // Populate player dropdowns
+                const player1Select = document.getElementById('editPlayer1');
+                const player2Select = document.getElementById('editPlayer2');
+                
+                player1Select.innerHTML = clubData.members.map(member => `
+                    <option value="${member.name}" ${game.players[0] === member.name ? 'selected' : ''}>${member.name}</option>
+                `).join('');
+                
+                player2Select.innerHTML = clubData.members.map(member => `
+                    <option value="${member.name}" ${game.players[1] === member.name ? 'selected' : ''}>${member.name}</option>
+                `).join('');
+                
+                document.getElementById('editPlayersModal').style.display = 'flex';
+                document.getElementById('playersError').style.display = 'none';
+            }
+        }
+
+        function closePlayersModal() {
+            document.getElementById('editPlayersModal').style.display = 'none';
+            currentEditingGameId = null;
+        }
+
+        function saveGamePlayers() {
+            const player1 = document.getElementById('editPlayer1').value;
+            const player2 = document.getElementById('editPlayer2').value;
+            
+            if (!player1 || !player2) {
+                document.getElementById('playersError').style.display = 'block';
+                return;
+            }
+            
+            if (player1 === player2) {
+                document.getElementById('playersError').textContent = 'Please select two different players';
+                document.getElementById('playersError').style.display = 'block';
+                return;
+            }
+            
+            const game = clubData.games.find(g => g.id === currentEditingGameId);
+            if (game) {
+                game.players = [player1, player2];
+                saveData();
+                generateGameSchedule();
+                renderUpcomingGamesAdmin();
+                closePlayersModal();
+                alert('Game players updated successfully!');
+            }
+        }
+
+        // Contact Support Management Functions
+        function showContactForm() {
+            document.getElementById('contactForm').style.display = 'block';
+            document.getElementById('contactType').value = 'email';
+            document.getElementById('contactTitle').value = '';
+            document.getElementById('contactDetails').value = '';
+            document.getElementById('contactDescription').value = '';
+            currentEditingContactId = null;
+        }
+
+        function hideContactForm() {
+            document.getElementById('contactForm').style.display = 'none';
+            currentEditingContactId = null;
+        }
+
+        function saveContact() {
+            const type = document.getElementById('contactType').value;
+            const title = document.getElementById('contactTitle').value;
+            const details = document.getElementById('contactDetails').value;
+            const description = document.getElementById('contactDescription').value;
+            
+            if (title && details) {
+                if (currentEditingContactId) {
+                    // Editing existing contact
+                    const contact = clubData.contacts.find(c => c.id === currentEditingContactId);
+                    if (contact) {
+                        contact.type = type;
+                        contact.title = title;
+                        contact.details = details;
+                        contact.description = description;
+                    }
+                } else {
+                    // Adding new contact
+                    const newContact = {
+                        id: clubData.contacts.length + 1,
+                        type,
+                        title,
+                        details,
+                        description
+                    };
+                    clubData.contacts.push(newContact);
+                }
+                
+                saveData();
+                renderContacts();
+                renderContactSupport();
+                hideContactForm();
+                alert('Contact saved successfully!');
+            } else {
+                alert('Please fill in all required fields.');
+            }
+        }
+
+        function renderContacts() {
+            const contactsList = document.getElementById('contactsList');
+            contactsList.innerHTML = clubData.contacts.map(contact => `
+                <div class="contact-edit-form">
+                    <div class="form-group">
+                        <label>Contact Type</label>
+                        <input type="text" value="${contact.type}" readonly style="background: #f0f0f0;">
+                    </div>
+                    <div class="form-group">
+                        <label>Title/Name</label>
+                        <input type="text" value="${contact.title}" readonly style="background: #f0f0f0;">
+                    </div>
+                    <div class="form-group">
+                        <label>Contact Details</label>
+                        <input type="text" value="${contact.details}" readonly style="background: #f0f0f0;">
+                    </div>
+                    <div class="form-group">
+                        <label>Description</label>
+                        <input type="text" value="${contact.description}" readonly style="background: #f0f0f0;">
+                    </div>
+                    <div class="contact-edit-actions">
+                        <button class="edit-contact-btn" onclick="editContact(${contact.id})">Edit</button>
+                        <button class="btn-danger" onclick="deleteContact(${contact.id})">Delete</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function editContact(contactId) {
+            const contact = clubData.contacts.find(c => c.id === contactId);
+            if (contact) {
+                currentEditingContactId = contactId;
+                document.getElementById('contactForm').style.display = 'block';
+                document.getElementById('contactType').value = contact.type;
+                document.getElementById('contactTitle').value = contact.title;
+                document.getElementById('contactDetails').value = contact.details;
+                document.getElementById('contactDescription').value = contact.description;
+            }
+        }
+
+        function deleteContact(contactId) {
+            if (confirm('Are you sure you want to delete this contact?')) {
+                clubData.contacts = clubData.contacts.filter(c => c.id !== contactId);
+                saveData();
+                renderContacts();
+                renderContactSupport();
+                alert('Contact deleted successfully!');
+            }
+        }
+
+        function renderContactSupport() {
+            const contactContent = document.getElementById('contactContent');
+            if (contactContent) {
+                contactContent.innerHTML = `
+                    <div class="bylaws-container">
+                        <h2 style="color: #2d5a27; margin-bottom: 25px; text-align: center;">Contact Support</h2>
+                        
+                        <div class="contact-info">
+                            ${clubData.contacts.map(contact => `
+                                <div class="contact-item">
+                                    <div class="contact-icon">${getContactIcon(contact.type)}</div>
+                                    <div class="contact-details">
+                                        <h4>${contact.title}</h4>
+                                        <p>${contact.details}</p>
+                                        <p>${contact.description}</p>
+                                    </div>
+                                </div>
+                            `).join('')}
+                            
+                            <div class="contact-item">
+                                <div class="contact-icon">🚨</div>
+                                <div class="contact-details">
+                                    <h4>Emergency Contact</h4>
+                                    <p>For urgent matters outside business hours, please text (555) 987-6543 and we will respond as soon as possible.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        function getContactIcon(type) {
+            switch(type) {
+                case 'email': return '📧';
+                case 'phone': return '📞';
+                case 'chairman': return '👤';
+                case 'treasurer': return '💰';
+                case 'handicap': return '🏌️';
+                default: return '📋';
+            }
+        }
+
+        // Admin functions
+        function exportData() {
+            const dataStr = JSON.stringify(clubData, null, 2);
+            const dataBlob = new Blob([dataStr], {type: 'application/json'});
+            const url = URL.createObjectURL(dataBlob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = 'safari-golf-club-data.json';
+            link.click();
+            URL.revokeObjectURL(url);
+        }
+
+        function clearAllData() {
+            if (confirm('Are you sure you want to clear all data? This action cannot be undone.')) {
+                localStorage.removeItem('safariGolfClubData');
+                location.reload();
+            }
+        }
+
+        // Initialize the application
+        document.addEventListener('DOMContentLoaded', initializeData);
+    </script>
+</body>
+</html>
